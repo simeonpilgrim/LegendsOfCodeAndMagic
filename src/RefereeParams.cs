@@ -92,10 +92,10 @@ public class RefereeParams
   }
   // todo toString?
 
-  private boolean isNumber(String str)
+  private bool isNumber(String str)
   {
     try {
-      Long.parseLong(str);
+      long.parseLong(str);
       return true;
     } catch (NumberFormatException nfe) {}
     return false;
