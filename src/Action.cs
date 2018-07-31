@@ -1,7 +1,6 @@
-package com.codingame.game.engine;
+using System.Collections.Generic;
 
-import java.util.ArrayList;
-import java.util.List;
+namespace LOCAM {
 
 /**
  * Created by aCat on 2018-03-22.
@@ -14,7 +13,7 @@ public class Action
   public int arg1;
   public int arg2;
   public Card.Type cardType; // for items
-  public String text; // for say
+  public string text; // for say
   public ActionResult result;
 
   public Action()
@@ -22,11 +21,11 @@ public class Action
   }
 
 
-  public static List<Action> parseSequence(String data) throws InvalidActionHard
+  public static List<Action> parseSequence(string data)
   {
     ArrayList<Action> actions = new ArrayList<>();
 
-    for (String str : data.split(";"))
+    for (string str : data.split(";"))
     {
       str = str.trim();
       if (str.isEmpty())
@@ -40,9 +39,9 @@ public class Action
   // todo copy constructor?
 
 
-  public static Action parse (String data) throws InvalidActionHard
+  public static Action parse (string data)s
   {
-    String[] str = data.split(" ", 2);
+    string[] str = data.split(" ", 2);
 
     Type type;
     switch (str[0].trim())
@@ -58,10 +57,10 @@ public class Action
     {
       try
       {
-      String[] args = str[1].split(" ", 2);
+      string[] args = str[1].split(" ", 2);
       int arg1;      
-      arg1 = Integer.parseInt(args[0]);
-      String text = args.length < 2 ? "" : args[1].trim();
+      arg1 = int.Parse(args[0]);
+      string text = args.length < 2 ? "" : args[1].trim();
       return Action.newSummon(arg1, text);      
       }
       catch (Exception e)
@@ -77,18 +76,18 @@ public class Action
 
       try
       {
-          String[] args = str[1].split(" ", 3);
+          string[] args = str[1].split(" ", 3);
 
           int arg1;
           int arg2;
-        arg1 = Integer.parseInt(args[0]);
-        arg2 = Integer.parseInt(args[1]);
-        String text = args.length < 3 ? "" : args[2].trim();
+        arg1 = int.Parse(args[0]);
+        arg2 = int.Parse(args[1]);
+        string text = args.length < 3 ? "" : args[2].trim();
         return type==Type.ATTACK ? Action.newAttack(arg1, arg2, text) : Action.newUse(arg1, arg2, text);
       }
       catch (Exception e)
       {
-        throw new InvalidActionHard("Invalid "+type.toString()+" arguments. Expected two integers (card id and target id).");
+        throw new InvalidActionHard("Invalid "+type.ToString()+" arguments. Expected two integers (card id and target id).");
       }
 
       
@@ -100,7 +99,7 @@ public class Action
     return newSummon(arg1, "");
   }
 
-  public static Action newSummon(int arg1, String text) // todo private?
+  public static Action newSummon(int arg1, string text) // todo private?
   {
     Action a = new Action();
     a.type = Type.SUMMON;
@@ -115,7 +114,7 @@ public class Action
     return newAttack(arg1, arg2, "");
   }
 
-  public static Action newAttack(int arg1, int arg2, String text) // todo private?
+  public static Action newAttack(int arg1, int arg2, string text) // todo private?
   {
     Action a = new Action();
     a.type = Type.ATTACK;
@@ -141,7 +140,7 @@ public class Action
 
 
   // todo - it's just a shell now
-  public static Action newUse(int arg1, int arg2, String text) // todo private?
+  public static Action newUse(int arg1, int arg2, string text) // todo private?
   {
     Action a = new Action();
     a.type = Type.USE;
@@ -152,33 +151,32 @@ public class Action
     return a;
   }
 
-  public String toStringNoText()
+  public string toStringNoText()
   {
     switch (type)
     {
-      case SUMMON: return String.format("SUMMON %d", arg1);
-      case ATTACK: return String.format("ATTACK %d %d", arg1, arg2);
-      case USE: return String.format("USE %d %d", arg1, arg2);
+      case SUMMON: return string.Format("SUMMON %d", arg1);
+      case ATTACK: return string.Format("ATTACK %d %d", arg1, arg2);
+      case USE: return string.Format("USE %d %d", arg1, arg2);
       case PASS: return "PASS";
     }
-    return super.toString();
+    return super.ToString();
   }
 
-  @Override
-  public String toString()
+  override
+  public string ToString()
   {
     switch (type)
     {
-      case SUMMON: return String.format("SUMMON %d %s", arg1, text);
-      case ATTACK: return String.format("ATTACK %d %d %s", arg1, arg2, text);
-      case USE: return String.format("USE %d %d %s", arg1, arg2, text);
+      case SUMMON: return string.Format("SUMMON %d %s", arg1, text);
+      case ATTACK: return string.Format("ATTACK %d %d %s", arg1, arg2, text);
+      case USE: return string.Format("USE %d %d %s", arg1, arg2, text);
       case PASS: return "PASS";
     }
-    return super.toString();
+    return super.ToString();
   }
 
-  @Override
-  public boolean equals(Object other)
+  override public bool equals(Object other)
   {
     if (other == null) return false;
     if (other == this) return true;
@@ -186,4 +184,5 @@ public class Action
     Action a = (Action)other;
     return this.toStringNoText().equals(a.toStringNoText());
   }
+}
 }

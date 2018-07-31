@@ -9,21 +9,21 @@ import java.util.List;
  */
 public class Keywords {
 
-    public boolean hasBreakthrough;
-    public boolean hasCharge;
-    public boolean hasDrain;
-    public boolean hasGuard;
-    public boolean hasLethal;
-    //public boolean hasRegenerate;
-    public boolean hasWard;
+    public bool hasBreakthrough;
+    public bool hasCharge;
+    public bool hasDrain;
+    public bool hasGuard;
+    public bool hasLethal;
+    //public bool hasRegenerate;
+    public bool hasWard;
 
-    public boolean hasAnyKeyword() {
+    public bool hasAnyKeyword() {
         return hasBreakthrough || hasCharge || hasDrain || hasGuard || hasLethal /*|| hasRegenerate*/ || hasWard;
     }
 
-    //TODO maybe this method should return already joined String
-    public List<String> getListOfKeywords() {
-        List<String> keywords = new ArrayList<>();
+    //TODO maybe this method should return already joined string
+    public List<string> getListOfKeywords() {
+        List<string> keywords = new ArrayList<>();
         if (hasBreakthrough) keywords.add("Breakthrough");
         if (hasCharge) keywords.add("Charge");
         if (hasDrain) keywords.add("Drain");
@@ -34,7 +34,7 @@ public class Keywords {
         return keywords;
     }
 
-    public Keywords(String data) {
+    public Keywords(string data) {
         hasBreakthrough = data.charAt(0) == 'B';
         hasCharge = data.charAt(1) == 'C';
         hasDrain = data.charAt(2) == 'D';
@@ -54,16 +54,16 @@ public class Keywords {
         hasWard = keywords.hasWard;
     }
 
-    public String toString() {
+    public string ToString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(hasBreakthrough ? 'B' : '-');
-        sb.append(hasCharge ? 'C' : '-');
-        sb.append(hasDrain ? 'D' : '-');
-        sb.append(hasGuard ? 'G' : '-');
-        sb.append(hasLethal ? 'L' : '-');
-        //sb.append(hasRegenerate ? 'R' : '-');
-        sb.append(hasWard ? 'W' : '-');
-        return sb.toString();
+        sb.Append(hasBreakthrough ? 'B' : '-');
+        sb.Append(hasCharge ? 'C' : '-');
+        sb.Append(hasDrain ? 'D' : '-');
+        sb.Append(hasGuard ? 'G' : '-');
+        sb.Append(hasLethal ? 'L' : '-');
+        //sb.Append(hasRegenerate ? 'R' : '-');
+        sb.Append(hasWard ? 'W' : '-');
+        return sb.ToString();
     }
 
 }

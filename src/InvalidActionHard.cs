@@ -1,12 +1,14 @@
-package com.codingame.game.engine;
+using System;
 
-public class InvalidActionHard extends Exception
+namespace LOCAM
 {
-  private static final long serialVersionUID = -8185589153224401565L;
+    public class InvalidActionHard : Exception
+    {
+       // private static final long serialVersionUID = -8185589153224401565L;
 
-  public InvalidActionHard(String message)
-  {
-    super(message);
-  }
+        public InvalidActionHard(string message):base(message)
+        {
+        }
 
+    }
 }

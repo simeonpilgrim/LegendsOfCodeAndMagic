@@ -1,44 +1,41 @@
-package com.codingame.game.engine;
+using System.Collections.Generic;
+using System.Text;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+namespace LOCAM
+{
 
-import static com.codingame.game.engine.Constants.INITIAL_HAND_SIZE;
-
-/**
- * Created by aCat on 2018-03-24.
- */
-public class Gamer
+    /**
+     * Created by aCat on 2018-03-24.
+     */
+    public class Gamer
 {
   int id;
-  //public boolean isSecond;
-  public ArrayList<Card> hand;
-  public ArrayList<Card> deck;
-  public ArrayList<CreatureOnBoard> board;
-  public ArrayList<CreatureOnBoard> graveyard;
+  //public bool isSecond;
+  public List<Card> hand;
+  public List<Card> deck;
+  public List<CreatureOnBoard> board;
+  public List<CreatureOnBoard> graveyard;
   public int health;
   public int maxMana;
   public int currentMana;
   public int nextTurnDraw;
 
-  public ArrayList<Integer> runes = new ArrayList<Integer>() {{ add(5);add(10);add(15);add(20);add(25); }};
-  public ArrayList<Action> performedActions;
+  public List<int> runes = new List<int>() { 5,10,15,20,25};
+  public List<Action> performedActions;
   public int handLimit;
 
   // todo rest
 
 
 
-  public Gamer(int id, ArrayList<Card> deck)
+  public Gamer(int id, List<Card> deck)
   {
     this.id = id;
-    this.hand = new ArrayList<>();
-    this.deck = new ArrayList<>(deck);
-    this.board = new ArrayList<>();
-    this.graveyard = new ArrayList<>();
-    this.performedActions = new ArrayList<>();
+    this.hand = new List<>();
+    this.deck = new List<>(deck);
+    this.board = new List<>();
+    this.graveyard = new List<>();
+    this.performedActions = new List<>();
     this.health = Constants.INITIAL_HEALTH;
     this.maxMana = 0;
     this.currentMana = 0;
@@ -110,44 +107,45 @@ public class Gamer
       graveyard.add(board.remove(creatureIndex));
   }
 
-  public String toDescriptiveString(boolean reverse)
+  public string toDescriptiveString(bool reverse)
   {
-    String line1 = String.format("[Player %d] Health: %d %s     Mana: %d/%d", id, health, runes, currentMana, maxMana);
-    String line2 = String.format("Cards in hand: %d   In deck: %d   Next turn draw: %d", hand.size(), deck.size(), nextTurnDraw);
+    string line1 = string.Format("[Player %d] Health: %d %s     Mana: %d/%d", id, health, runes, currentMana, maxMana);
+    string line2 = string.Format("Cards in hand: %d   In deck: %d   Next turn draw: %d", hand.size(), deck.size(), nextTurnDraw);
 
-    ArrayList<String> inhand = new ArrayList<>();
+    ArrayList<string> inhand = new ArrayList<>();
     inhand.add("Hand:");
     for (Card c: hand)
       inhand.add((c.cost <= this.currentMana ? " * " : "   ") + c.toDescriptiveString());
 
-    ArrayList<String> onboard = new ArrayList<>();
+    ArrayList<string> onboard = new ArrayList<>();
     onboard.add("Board:");
     for (CreatureOnBoard c: board)
       onboard.add((c.canAttack ? " * " : "   ") + c.toDescriptiveString());
 
-    ArrayList<String> description = new ArrayList<>();
+    ArrayList<string> description = new ArrayList<>();
     description.add(line1);
     description.add(line2);
-    description.add(String.join("\n",inhand));
-    description.add(String.join("\n",onboard));
+    description.add(string.join("\n",inhand));
+    description.add(string.join("\n",onboard));
     if (reverse)
       Collections.reverse(description);
 
-    return String.join("\n", description);
+    return string.join("\n", description);
   }
 
   // todo
-  public String toString()
+  public string ToString()
   {
-    return super.toString();
+    return super.ToString();
   }
 
-  public String getPlayerInput() {
+  public string getPlayerInput() {
 	  StringBuilder s = new StringBuilder();
-	  s.append(health).append(" ");
-	  s.append(maxMana).append(" ");
-	  s.append(deck.size()).append(" ");
-	  s.append(nextRune());
-	  return s.toString();
+	  s.Append(health).Append(" ");
+	  s.Append(maxMana).Append(" ");
+	  s.Append(deck.size()).Append(" ");
+	  s.Append(nextRune());
+	  return s.ToString();
   }
+}
 }

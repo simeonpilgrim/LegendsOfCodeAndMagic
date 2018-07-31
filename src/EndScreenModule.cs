@@ -1,16 +1,10 @@
-package com.codingame.view.endscreen;
-
-import com.codingame.gameengine.core.AbstractPlayer;
-import com.codingame.gameengine.core.GameManager;
-import com.codingame.gameengine.core.Module;
-import com.google.inject.Inject;
-
-public class EndScreenModule implements Module {
+namespace LOCAM
+{
+    public class EndScreenModule : Module {
 
     private GameManager<AbstractPlayer> gameManager;
     private int[] scores;
 
-    @Inject
     EndScreenModule(GameManager<AbstractPlayer> gameManager) {
         this.gameManager = gameManager;
         gameManager.registerModule(this);
@@ -20,16 +14,14 @@ public class EndScreenModule implements Module {
         this.scores = scores;
     }
 
-    @Override
-    public final void onGameInit() {
+    override public void onGameInit() {
     }
-    @Override
-    public final void onAfterGameTurn() {
+    override public void onAfterGameTurn() {
     }
 
-    @Override
-    public final void onAfterOnEnd() {
+    override public void onAfterOnEnd() {
         gameManager.setViewData("endScreen", scores);
     }
 
+}
 }

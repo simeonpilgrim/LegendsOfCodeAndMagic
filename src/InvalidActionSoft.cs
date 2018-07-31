@@ -1,12 +1,14 @@
-package com.codingame.game.engine;
+using System;
 
-public class InvalidActionSoft extends Exception
-{
-  private static final long serialVersionUID = -8185589153224401564L;
+namespace LOCAM {
 
-  public InvalidActionSoft(String message)
-  {
-    super(message);
-  }
+    public class InvalidActionSoft : Exception
+    {
+        //private static final long serialVersionUID = -8185589153224401564L;
 
+        public InvalidActionSoft(string message):base(message)
+        {
+        }
+
+    }
 }

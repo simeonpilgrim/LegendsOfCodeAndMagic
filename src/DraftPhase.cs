@@ -1,15 +1,10 @@
-package com.codingame.game.engine;
+namespace LOCAM
+{
 
-//import javafx.util.Pair; :(
-
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-/**
- * Created by aCat on 2018-03-24.
- */
-public class DraftPhase
+    /**
+     * Created by aCat on 2018-03-24.
+     */
+    public class DraftPhase
 {
   public enum Difficulty {NORMAL, LESS_EASY, EASY, VERY_EASY};
 
@@ -22,7 +17,7 @@ public class DraftPhase
   public ArrayList<Card>[] chosenCards;
   public ArrayList<Card>[] decks; // after shuffle and assigning unique id's
   
-  public String[] text = new String[2];
+  public string[] text = new string[2];
 
   private Random choicesRNG;
   private Random[] shufflesRNG;
@@ -42,7 +37,7 @@ public class DraftPhase
     shufflesRNG = new Random[] {params.shufflePlayer0RNG, params.shufflePlayer1RNG};
   }
 
-  private boolean isVeryEasyCard(Card card)
+  private bool isVeryEasyCard(Card card)
   {
     return card.type == Card.Type.CREATURE
             && !card.keywords.hasAnyKeyword()
@@ -131,14 +126,14 @@ public class DraftPhase
     //return draftCards;
   }
 
-  public ChoiceResultPair PlayerChoice(int pickNumber, String action, int player) throws InvalidActionHard
+  public ChoiceResultPair PlayerChoice(int pickNumber, string action, int player) throws InvalidActionHard
   {
     Card[] cards = draft[pickNumber];
     Card choice = null;
-    String text = "";
+    string text = "";
     try
     {
-      String[] command = action.split(" ", 3);
+      string[] command = action.split(" ", 3);
       text = command.length < 3 ? "" : command[2].trim();
 
       if (!command[0].equals("PICK") && !command[0].equals("CHOOSE") && !command[0].equals("PASS"))
@@ -148,7 +143,7 @@ public class DraftPhase
       }
       else if (command[0].equals("PICK"))
       {
-    	int value = Integer.parseInt(command[1]);
+    	int value = int.parse(command[1]);
         if (value < 0 || value > 2)
           throw new InvalidActionHard("Invalid action format. \"PICK\" argument should be 0, 1 or 2.");
         choice = cards[value];
@@ -159,7 +154,7 @@ public class DraftPhase
         ids.add(cards[0].baseId);
         ids.add(cards[1].baseId);
         ids.add(cards[2].baseId);
-        int value = Integer.parseInt(command[1]);
+        int value = int.parse(command[1]);
         
         if (!ids.contains(value))
           throw new InvalidActionHard("Invalid action format. \"CHOOSE\" argument should be valid card's base id " + ids + ".");
@@ -196,30 +191,31 @@ public class DraftPhase
   public class ChoiceResultPair
   {
     public Card card;
-    public String text;
+    public string text;
 
-    public ChoiceResultPair(Card card, String text)
+    public ChoiceResultPair(Card card, string text)
     {
       this.card = card;
       this.text = text;
     }
   }
   
-  public String[] getMockPlayersInput() {
-	    ArrayList<String> lines = new ArrayList<>();
-	    String s = join(Constants.INITIAL_HEALTH, 0, decks[0].size(), 25);
+  public string[] getMockPlayersInput() {
+	    ArrayList<string> lines = new ArrayList<>();
+	    string s = join(Constants.INITIAL_HEALTH, 0, decks[0].size(), 25);
 	    lines.add(s);
 	    lines.add(s);
 	    lines.add("0");
 	    lines.add("3");
 	    
 	    
-	    return lines.stream().toArray(String[]::new);
+	    return lines.stream().ToArray();
 	  }
   
-  static public String join(Object... args) {
-      return Stream.of(args).map(String::valueOf).collect(Collectors.joining(" "));
+  static public string join(Object... args) {
+      return Stream.of(args).map(string::valueOf).collect(Collectors.joining(" "));
   }
 }
 
 
+}

@@ -1,6 +1,6 @@
-package com.codingame.game.ui;
-
-public class ConstantsUI {
+namespace LOCAM
+{
+    public class ConstantsUI {
     public static final Vector2D SCREEN_DIM = new Vector2D(1920, 1080);
     public static final Vector2D CARD_DIM   = new Vector2D(210,  260);
 
@@ -16,7 +16,7 @@ public class ConstantsUI {
         new Vector2D(180, 205)
     };
 
-    public static final String[] CARD_KEYWORDS_IMAGES = {
+    public static final string[] CARD_KEYWORDS_IMAGES = {
         "B.png",
         "C.png",
         "D.png",
@@ -89,4 +89,5 @@ public class ConstantsUI {
     public static final int MC_GRAPH_MAXSIZE = 175;
     public static final int MC_GRAPH_ZEROSIZE = 2;
     public static final int[] MC_PLAYERS_OFFSET = {0, -860};
+}
 }
