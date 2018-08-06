@@ -51,7 +51,6 @@ namespace LOCAM
         public int cardDraw;
         public string name;
         public string text;
-        private string tooltipTextBase;
         public string comment;
 
 
@@ -75,7 +74,6 @@ namespace LOCAM
             this.cardDraw = card.cardDraw;
             this.comment = card.comment;
             generateText();
-            this.tooltipTextBase = card.tooltipTextBase;
         }
 
         // data = {baseId, name, type, cost, attack, defense, keywords, myHealthChange, oppHealthChange, cardDraw, comment}
@@ -95,14 +93,6 @@ namespace LOCAM
 
             this.comment = ""; //data[11]; // comments deprecated as we are far from TESL in many cards
             generateText();
-            try
-            {
-                this.tooltipTextBase = data[10];
-            }
-            catch (java.lang.ArrayIndexOutOfBoundsException e)
-            {
-                this.tooltipTextBase = "";
-            }
         }
 
         public void generateText()
@@ -111,49 +101,49 @@ namespace LOCAM
 
             List<string> keywords = this.keywords.getListOfKeywords();
 
-            ArrayList<string> summon = new ArrayList<>();
+            List<string> summon = new List<string>();
 
             if (myHealthChange > 0)
-                summon.add("gain " + myHealthChange + " health");
+                summon.Add("gain " + myHealthChange + " health");
             if (myHealthChange < 0)
-                summon.add("deal " + Math.abs(myHealthChange) + " damage to yourself");
+                summon.Add("deal " + Math.Abs(myHealthChange) + " damage to yourself");
             if (oppHealthChange < 0)
-                summon.add("deal " + Math.abs(oppHealthChange) + " damage to your opponent");
+                summon.Add("deal " + Math.Abs(oppHealthChange) + " damage to your opponent");
             if (cardDraw > 0)
-                summon.add("draw " + (cardDraw == 1 ? "a card" : (cardDraw + " cards")));
+                summon.Add("draw " + (cardDraw == 1 ? "a card" : (cardDraw + " cards")));
 
             if (type == Type.CREATURE)
             {
-                sb.Append(string.join(", ", keywords));
+                sb.Append(string.Join(", ", keywords));
                 if (myHealthChange != 0 || oppHealthChange != 0 || cardDraw != 0)
                 {
-                    sb.Append(keywords.isEmpty() ? "" : "; ").Append("Summon: ");
-                    sb.Append(string.join(", ", summon)).Append(".");
+                    sb.Append(keywords.Count == 0 ? "" : "; ").Append("Summon: ");
+                    sb.Append(string.Join(", ", summon)).Append(".");
                 }
             }
             else if (type == Type.ITEM_GREEN)
             {
-                if (!keywords.isEmpty())
+                if (keywords.Count != 0)
                     sb.Append("Give ").Append(string.join(", ", keywords));
                 if (myHealthChange != 0 || oppHealthChange != 0 || cardDraw != 0)
                 {
-                    sb.Append(keywords.isEmpty() ? "" : "; ");
-                    sb.Append(string.join(", ", summon)).Append(".");
+                    sb.Append(keywords.Count == 0 ? "" : "; ");
+                    sb.Append(string.Join(", ", summon)).Append(".");
                 }
             }
             else if (type == Type.ITEM_RED)
             {
-                if (!keywords.isEmpty())
-                    sb.Append("Remove ").Append(keywords.size() == 7 ? "all keywords" : string.join(", ", keywords));
+                if (keywords.Count != 0)
+                    sb.Append("Remove ").Append(keywords.Count == 7 ? "all keywords" : string.join(", ", keywords));
                 if (myHealthChange != 0 || oppHealthChange != 0 || cardDraw != 0)
                 {
-                    sb.Append(keywords.isEmpty() ? "" : "; ");
-                    sb.Append(string.join(", ", summon)).Append(".");
+                    sb.Append(keywords.Count == 0 ? "" : "; ");
+                    sb.Append(string.Join(", ", summon)).Append(".");
                 }
             }
             else
             {
-                sb.Append(string.join(", ", summon)).Append(".");
+                sb.Append(string.Join(", ", summon)).Append(".");
             }
 
             this.text = sb.ToString();
@@ -240,11 +230,9 @@ namespace LOCAM
                 }
                 List<string> keywordsList = keywords.getListOfKeywords();
 
-                if (!keywordsList.isEmpty())
-                    sb.Append("\\n").Append(string.join(", ", keywordsList));
-                string tt = tooltipTextBase.trim();
-                if (tt.length() > 0)
-                    sb.Append("\\n").Append(tt);
+                if (keywordsList.Count != 0)
+                    sb.Append("\\n").Append(string.Join(", ", keywordsList));
+
                 return sb.ToString();
             }
 
@@ -254,7 +242,6 @@ namespace LOCAM
                 sb.Append("Red Item\\n");
             if (type == Type.ITEM_BLUE)
                 sb.Append("Blue Item\\n");
-            sb.Append(tooltipTextBase.trim());
 
             return sb.ToString();
         }
@@ -269,7 +256,7 @@ namespace LOCAM
             sb.Append("cost: ").Append(this.cost).Append("\n");
             sb.Append("\n");
 
-            sb.Append(toTooltipInnerText(creatureOnBoard).replace("\\n", "\n"));
+            sb.Append(toTooltipInnerText(creatureOnBoard).Replace("\\n", "\n"));
 
             return sb.ToString();
         }
@@ -311,12 +298,12 @@ namespace LOCAM
                 string fullname = m.group(2).replace("-", " ");
                 string link = string.Format("<a href=\"https://www.legends-decks.com/card/%s/%s\">%s<img class=\"enlarge\" src=\"https://www.legends-decks.com/img_cards/%s.png\"></a>",
                         m.group(1), lowname, fullname, lowname);
-                htmlcomment = htmlcomment.replace(m.group(0), link);
+                htmlcomment = htmlcomment.Replace(m.group(0), link);
             }
 
             string tt = toTooltipInnerText();
             if (tt.length() > 0)
-                sb.Append("<td><i>").Append(tt.replace("\\n", "<br/>")).Append("</i></td>");
+                sb.Append("<td><i>").Append(tt.Replace("\\n", "<br/>")).Append("</i></td>");
             else
                 sb.Append("<td><i>").Append(toTextDescription()).Append("</i></td>");
 

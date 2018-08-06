@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace LOCAM {
 
     public class EngineReferee {
@@ -8,16 +11,16 @@ namespace LOCAM {
 
         public int gamePlayer = 0;
         public int gameTurn = 0;
-        public List<Action> actionsToHandle = new ArrayList<>();
+        public List<Action> actionsToHandle = new List<Action>();
 
         private bool showStart = true;
 
-        static final int ILLEGAL_ACTION_SUMMARY_LIMIT = 3;
+        const int ILLEGAL_ACTION_SUMMARY_LIMIT = 3;
 
         public void refereeInit(MultiplayerGameManager<Player> gameManager) {
-            if (Constants.VERBOSE_LEVEL > 1) System.out.println("New game");
+            if (Constants.VERBOSE_LEVEL > 1) Console.WriteLine("New game");
 
-            RefereeParams params = new RefereeParams(gameManager);
+            RefereeParams _params = new RefereeParams(gameManager);
 
             DraftPhase.Difficulty difficulty;
             switch (gameManager.getLeagueLevel()) {
@@ -37,14 +40,14 @@ namespace LOCAM {
 
 
             Constants.LoadCardlist("cardlist.txt");
-            if (Constants.VERBOSE_LEVEL > 1) System.out.println("   CARDSET with " + Constants.CARDSET.size() + " cards loaded.");
-            if (Constants.VERBOSE_LEVEL > 1) System.out.println("   Difficulty is set to: " + difficulty.name() + ".");
+            if (Constants.VERBOSE_LEVEL > 1) Console.WriteLine("   CARDSET with " + Constants.CARDSET.Count + " cards loaded.");
+            if (Constants.VERBOSE_LEVEL > 1) Console.WriteLine("   Difficulty is set to: " + difficulty.name() + ".");
 
-            draft = new DraftPhase(difficulty, params);
+            draft = new DraftPhase(difficulty, _params);
             draft.PrepareChoices();
 
-            if (Constants.VERBOSE_LEVEL > 1) System.out.println("   Draw Phase Prepared. " + draft.allowedCards.size() + " cards allowed. ");
-            if (Constants.VERBOSE_LEVEL > 1) System.out.println("   " + draft.draftingCards.size() + " cards selected to the draft.");
+            if (Constants.VERBOSE_LEVEL > 1) Console.WriteLine("   Draw Phase Prepared. " + draft.allowedCards.Count + " cards allowed. ");
+            if (Constants.VERBOSE_LEVEL > 1) Console.WriteLine("   " + draft.draftingCards.Count + " cards selected to the draft.");
 
             gameManager.setMaxTurns(Constants.MAX_TURNS_HARDLIMIT); // should be never reached, not handled on the referee's side
         }
@@ -65,8 +68,8 @@ namespace LOCAM {
         }
 
         private void DraftTurn(MultiplayerGameManager<Player> gameManager, Runnable render) {
-            if (Constants.VERBOSE_LEVEL > 1 && gameTurn == 0) System.out.println("   Draft phase");
-            if (Constants.VERBOSE_LEVEL > 2) System.out.println("      Draft turn " + gameTurn + "/" + Constants.CARDS_IN_DECK);
+            if (Constants.VERBOSE_LEVEL > 1 && gameTurn == 0) Console.WriteLine("   Draft phase");
+            if (Constants.VERBOSE_LEVEL > 2) Console.WriteLine("      Draft turn " + gameTurn + "/" + Constants.CARDS_IN_DECK);
 
             gameManager.setTurnMaxTime(gameTurn == 0 ? Constants.TIMELIMIT_FIRSTDRAFTTURN : Constants.TIMELIMIT_DRAFTTURN);
 
@@ -110,8 +113,8 @@ namespace LOCAM {
             if (state == null) // frame-only turn for showing the initial state
             {
                 draft.ShuffleDecks();
-                if (Constants.VERBOSE_LEVEL > 1) System.out.println("   Decks shuffled.");
-                if (Constants.VERBOSE_LEVEL > 1) System.out.println("   Game phase");
+                if (Constants.VERBOSE_LEVEL > 1) Console.WriteLine("   Decks shuffled.");
+                if (Constants.VERBOSE_LEVEL > 1) Console.WriteLine("   Game phase");
                 state = new GameState(draft);
 
                 gameManager.setTurnMaxTime(1); // weird try but works ^^
@@ -135,7 +138,7 @@ namespace LOCAM {
                 }
             } else // it's time to actually call a player
             {
-                if (Constants.VERBOSE_LEVEL > 2) System.out.print("      Game turn " + (gameTurn - Constants.CARDS_IN_DECK) + ", player " + gamePlayer);
+                if (Constants.VERBOSE_LEVEL > 2) Console.Write("      Game turn " + (gameTurn - Constants.CARDS_IN_DECK) + ", player " + gamePlayer);
 
                 gameManager.setTurnMaxTime(gameTurn <= Constants.CARDS_IN_DECK + 1 ? Constants.TIMELIMIT_FIRSTGAMETURN : Constants.TIMELIMIT_GAMETURN);
 
@@ -150,7 +153,7 @@ namespace LOCAM {
                 try {
                     string output = sdkplayer.getOutputs().get(0);
                     actionsToHandle = Action.parseSequence(output);
-                    if (Constants.VERBOSE_LEVEL > 2) System.out.println(" (returned " + actionsToHandle.size() + " actions)");
+                    if (Constants.VERBOSE_LEVEL > 2) Console.WriteLine(" (returned " + actionsToHandle.Count + " actions)");
                 } catch (InvalidActionHard e) {
                     HandleError(gameManager, sdkplayer, sdkplayer.getNicknameToken() + ": " + e.getMessage());
                 } catch (TimeoutException e) {
@@ -159,7 +162,7 @@ namespace LOCAM {
             }
 
             // now we roll-out actions until next legal is found
-            List<Action> legals = state.computeLegalActions(); //System.out.println(gameTurn + " "+ state.players[state.currentPlayer].currentMana +"/"+state.players[state.currentPlayer].maxMana + "->"+legals);
+            List<Action> legals = state.computeLegalActions(); //Console.WriteLine(gameTurn + " "+ state.players[state.currentPlayer].currentMana +"/"+state.players[state.currentPlayer].maxMana + "->"+legals);
             int illegalActions = 0;
 
             while (!actionsToHandle.isEmpty()) {
@@ -208,9 +211,9 @@ namespace LOCAM {
 
             //gameManager.addToGameSummary("!\n" + state.ToString());
 
-            if (Constants.VERBOSE_LEVEL > 1) System.out.println("   Game finished in turn " + (gameTurn - Constants.CARDS_IN_DECK) + ".");
-            if (Constants.VERBOSE_LEVEL > 1) System.out.print("   Scores: ");
-            if (Constants.VERBOSE_LEVEL > 0) System.out.println((state.winner == 0 ? "1" : "0") + " " + (state.winner == 1 ? "1" : "0"));
+            if (Constants.VERBOSE_LEVEL > 1) Console.WriteLine("   Game finished in turn " + (gameTurn - Constants.CARDS_IN_DECK) + ".");
+            if (Constants.VERBOSE_LEVEL > 1) Console.Write("   Scores: ");
+            if (Constants.VERBOSE_LEVEL > 0) Console.WriteLine((state.winner == 0 ? "1" : "0") + " " + (state.winner == 1 ? "1" : "0"));
 
             gameManager.addToGameSummary(MultiplayerGameManager.formatSuccessMessage(gameManager.getPlayer(state.winner).getNicknameToken() + " won!"));
             gameManager.getPlayer(state.winner).setScore(1);

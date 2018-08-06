@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace LOCAM
 {
 
@@ -21,21 +24,21 @@ namespace LOCAM
 
   private Random choicesRNG;
   private Random[] shufflesRNG;
-  private RefereeParams params;
+  private RefereeParams _params;
 
-  // todo - add function and field documentation
+        // todo - add function and field documentation
 
-  public DraftPhase(Difficulty difficulty, RefereeParams params)
-  {
-    this.difficulty = difficulty;
-    this.params = params;
+        public DraftPhase(Difficulty difficulty, RefereeParams _params)
+        {
+            this.difficulty = difficulty;
+            this._params = _params;
 
-    chosenCards = new ArrayList[] {new ArrayList<Card>(), new ArrayList<Card>()};
-    decks = new ArrayList[] {new ArrayList<Card>(), new ArrayList<Card>()};
+            chosenCards = new List[] { new List<Card>(), new List<Card>() };
+            decks = new List[] { new List<Card>(), new List<Card>() };
 
-    choicesRNG = params.draftChoicesRNG;
-    shufflesRNG = new Random[] {params.shufflePlayer0RNG, params.shufflePlayer1RNG};
-  }
+            choicesRNG = _params.draftChoicesRNG;
+            shufflesRNG = new Random[] { _params.shufflePlayer0RNG, _params.shufflePlayer1RNG };
+        }
 
   private bool isVeryEasyCard(Card card)
   {
@@ -46,10 +49,10 @@ namespace LOCAM
 
   private void prepareAllowedCards()
   {
-    Collection<Card> cardBase = Constants.CARDSET.values();
+    List<Card> cardBase = Constants.CARDSET.values();
 
     if (difficulty == Difficulty.NORMAL) {
-      allowedCards = new ArrayList<>(cardBase);
+      allowedCards = new List<Card>(cardBase);
     } else if (difficulty == Difficulty.LESS_EASY) {
         allowedCards = cardBase.stream()
             .filter(card -> !card.keywords.hasDrain && !card.keywords.hasLethal && !card.keywords.hasWard)
@@ -85,18 +88,18 @@ namespace LOCAM
       return;
     }
 
-    ArrayList<Integer> drafting = new ArrayList<>();
-    for (int pick = 0; pick < Math.min(Constants.CARDS_IN_DRAFT, allowedCards.size()); pick++)
+    List<Integer> drafting = new List<>();
+    for (int pick = 0; pick < Math.min(Constants.CARDS_IN_DRAFT, allowedCards.Count); pick++)
     {
       int i = -1;
       do
       {
-        i = choicesRNG.nextInt(allowedCards.size());
+        i = choicesRNG.nextInt(allowedCards.Count);
       } while (drafting.contains(i));
       drafting.add(i);
     }
 
-    assert (drafting.size()>=3);
+    assert (drafting.Count>=3);
 
     draftingCards = new ArrayList<>();
     for (Integer i:drafting)
@@ -106,16 +109,16 @@ namespace LOCAM
     draft = new Card[Constants.CARDS_IN_DECK][3];
     for (int pick = 0; pick < Constants.CARDS_IN_DECK; pick++)
     {
-      int choice1 = drafting.get(choicesRNG.nextInt(drafting.size()));
+      int choice1 = drafting.get(choicesRNG.nextInt(drafting.Count));
       int choice2;
       do
       {
-        choice2 = drafting.get(choicesRNG.nextInt(drafting.size()));
+        choice2 = drafting.get(choicesRNG.nextInt(drafting.Count));
       } while (choice2==choice1);
       int choice3;
       do
       {
-        choice3 = drafting.get(choicesRNG.nextInt(drafting.size()));
+        choice3 = drafting.get(choicesRNG.nextInt(drafting.Count));
       } while (choice3==choice1 || choice3==choice2);
 
       draft[pick][0] = allowedCards.get(choice1);
@@ -126,7 +129,7 @@ namespace LOCAM
     //return draftCards;
   }
 
-  public ChoiceResultPair PlayerChoice(int pickNumber, string action, int player) throws InvalidActionHard
+  public ChoiceResultPair PlayerChoice(int pickNumber, string action, int player) 
   {
     Card[] cards = draft[pickNumber];
     Card choice = null;
@@ -178,12 +181,12 @@ namespace LOCAM
   {
     for (int player=0; player <2; player++)
     {
-      for (Card c : chosenCards[player])
+      foreach (Card c in chosenCards[player])
       {
         decks[player].add(new Card(c));
       }
       Collections.shuffle(decks[player], shufflesRNG[player]);
-      for (int i=0; i < decks[player].size(); i++)
+      for (int i=0; i < decks[player].Count; i++)
         decks[player].get(i).id = 2 * i + player + 1;
     }
   }
@@ -201,8 +204,8 @@ namespace LOCAM
   }
   
   public string[] getMockPlayersInput() {
-	    ArrayList<string> lines = new ArrayList<>();
-	    string s = join(Constants.INITIAL_HEALTH, 0, decks[0].size(), 25);
+	    List<string> lines = new List<string>();
+	    string s = join(Constants.INITIAL_HEALTH, 0, decks[0].Count, 25);
 	    lines.add(s);
 	    lines.add(s);
 	    lines.add("0");

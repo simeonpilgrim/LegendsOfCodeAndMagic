@@ -49,7 +49,7 @@ namespace LOCAM
   {
     if (!runes.isEmpty()) // first rune gone
     {
-      Integer r = runes.remove(runes.size() - 1);
+      Integer r = runes.remove(runes.Count - 1);
       health = r;
     }
     else // final run gone - suicide
@@ -68,7 +68,7 @@ namespace LOCAM
         continue;
       }
 
-      if (hand.size()==handLimit)
+      if (hand.Count==handLimit)
       {
         break; // additional draws are simply wasted
       }
@@ -87,7 +87,7 @@ namespace LOCAM
     if (mod >= 0)
       return;
 
-    for (int r=runes.size()-1; r >=0; r--) // rune checking;
+    for (int r=runes.Count-1; r >=0; r--) // rune checking;
     {
       if (health <= runes.get(r))
       {
@@ -100,7 +100,7 @@ namespace LOCAM
   public int nextRune()
   {
     if (runes.isEmpty()) return 0;
-    return runes.get(runes.size()-1);
+    return runes.get(runes.Count-1);
   }
 
   public void removeFromBoard(int creatureIndex) {
@@ -110,7 +110,7 @@ namespace LOCAM
   public string toDescriptiveString(bool reverse)
   {
     string line1 = string.Format("[Player %d] Health: %d %s     Mana: %d/%d", id, health, runes, currentMana, maxMana);
-    string line2 = string.Format("Cards in hand: %d   In deck: %d   Next turn draw: %d", hand.size(), deck.size(), nextTurnDraw);
+    string line2 = string.Format("Cards in hand: %d   In deck: %d   Next turn draw: %d", hand.Count, deck.Count, nextTurnDraw);
 
     ArrayList<string> inhand = new ArrayList<>();
     inhand.add("Hand:");
@@ -143,7 +143,7 @@ namespace LOCAM
 	  StringBuilder s = new StringBuilder();
 	  s.Append(health).Append(" ");
 	  s.Append(maxMana).Append(" ");
-	  s.Append(deck.size()).Append(" ");
+	  s.Append(deck.Count).Append(" ");
 	  s.Append(nextRune());
 	  return s.ToString();
   }

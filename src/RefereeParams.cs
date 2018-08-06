@@ -71,7 +71,7 @@ namespace LOCAM {
             shufflePlayer0RNG = new Random(shufflePlayer0Seed);
             shufflePlayer1RNG = new Random(shufflePlayer1Seed);
 
-            //System.out.println(ToString());
+            //Console.WriteLine(ToString());
         }
 
         override

@@ -13,4 +13,13 @@
     <None Include="Referee.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="main\resources\cardlist.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="main\resources\cardset_template.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
