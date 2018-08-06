@@ -12,52 +12,54 @@ namespace LOCAM {
         public int winner;
         public int currentPlayer;
         public Gamer[] players;
-        public HashMap<Integer, Card> cardIdMap;
+        public Dictionary<int, Card> cardIdMap;
 
         public GameState(DraftPhase draft)
         {
-
-            assert(draft.decks[0].Count == Constants.CARDS_IN_DECK);
-            assert(draft.decks[1].Count == Constants.CARDS_IN_DECK);
+            //assert(draft.decks[0].Count == Constants.CARDS_IN_DECK);
+            //assert(draft.decks[1].Count == Constants.CARDS_IN_DECK);
 
             turn = -1;
             winner = -1;
             currentPlayer = 1;
             players = new Gamer[] { new Gamer(0, draft.decks[0]), new Gamer(1, draft.decks[1]) };
 
-            cardIdMap = new HashMap<>();
+            cardIdMap = new Dictionary<int, Card>();
             for (int i = 0; i < 2; i++)
-                for (Card c: draft.decks[i])
-                    cardIdMap.put(c.id, c);
+            {
+                foreach (Card c in draft.decks[i])
+                {
+                    cardIdMap[c.id] = c;
 
-
+                }
+            }
         }
 
 
 
         public List<Action> computeLegalActions()
         {
-            List<Action> legals = new ArrayList<>();
-            legals.addAll(computeLegalSummons());
-            legals.addAll(computeLegalAttacks());
-            legals.addAll(computeLegalItems());
-            legals.add(Action.newPass());
+            List<Action> legals = new List<Action>();
+            legals.AddRange(computeLegalSummons());
+            legals.AddRange(computeLegalAttacks());
+            legals.AddRange(computeLegalItems());
+            legals.Add(Action.newPass());
             return legals;
         }
 
         public List<Action> computeLegalSummons()
         {
             Gamer player = players[currentPlayer];
-            ArrayList<Action> actions = new ArrayList<>();
+            List<Action> actions = new List<Action>();
 
             if (player.board.Count == Constants.MAX_CREATURES_IN_LINE)
                 return actions;
 
-            for (Card c:player.hand)
+            foreach (Card c in player.hand)
             {
                 if (c.type != Card.Type.CREATURE || c.cost > player.currentMana)
                     continue;
-                actions.add(Action.newSummon(c.id));
+                actions.Add(Action.newSummon(c.id));
             }
 
             return actions;
@@ -73,7 +75,7 @@ namespace LOCAM {
                 if (c.keywords.hasGuard)
                     targets.Add(c.id);
 
-            if (targets.Count == 0)) // if no guards we can freely attack any creature plus face
+            if (targets.Count == 0) // if no guards we can freely attack any creature plus face
             {
                 targets.Add(-1);
                 foreach (CreatureOnBoard c in enemyPlayer.board)
@@ -170,7 +172,7 @@ namespace LOCAM {
         {
             if (action.type == Action.Type.SUMMON) // SUMMON [id]
             {
-                Card c = cardIdMap.get(action.arg1);
+                Card c = cardIdMap[action.arg1];
 
                 players[currentPlayer].hand.Remove(c);
                 players[currentPlayer].currentMana -= c.cost;
@@ -186,9 +188,9 @@ namespace LOCAM {
             {
                 int indexatt = -1;
                 for (int i = 0; i < players[currentPlayer].board.Count; i++)
-                    if (players[currentPlayer].board.get(i).id == action.arg1)
+                    if (players[currentPlayer].board[i].id == action.arg1)
                         indexatt = i;
-                CreatureOnBoard att = players[currentPlayer].board.get(indexatt);
+                CreatureOnBoard att = players[currentPlayer].board[indexatt];
 
                 int indexdef = -1;
                 CreatureOnBoard def;
@@ -217,14 +219,14 @@ namespace LOCAM {
                 if (result.attackerDied)
                     players[currentPlayer].removeFromBoard(indexatt);
                 else
-                    players[currentPlayer].board.set(indexatt, result.attacker);
+                    players[currentPlayer].board[indexatt] = result.attacker;
 
                 players[currentPlayer].ModifyHealth(result.attackerHealthChange);
                 players[1 - currentPlayer].ModifyHealth(result.defenderHealthChange);
                 action.result = result;
             } else if (action.type == Action.Type.USE) // USE [id1] [id2]
             {
-                Card item = cardIdMap.get(action.arg1);
+                Card item = cardIdMap[action.arg1];
 
                 players[currentPlayer].hand.Remove(item);
                 players[currentPlayer].currentMana -= item.cost;
@@ -235,7 +237,7 @@ namespace LOCAM {
                     for (int i = 0; i < players[currentPlayer].board.Count; i++)
                         if (players[currentPlayer].board[i].id == action.arg2)
                             indextarg = i;
-                    CreatureOnBoard targ = players[currentPlayer].board.get(indextarg);
+                    CreatureOnBoard targ = players[currentPlayer].board[indextarg];
 
                     ActionResult result = ResolveUse(item, targ);
 
@@ -256,16 +258,16 @@ namespace LOCAM {
                     } else // using on creature
                     {
                         for (int i = 0; i < players[1 - currentPlayer].board.Count; i++)
-                            if (players[1 - currentPlayer].board.get(i).id == action.arg2)
+                            if (players[1 - currentPlayer].board[i].id == action.arg2)
                                 indextarg = i;
-                        CreatureOnBoard targ = players[1 - currentPlayer].board.get(indextarg);
+                        CreatureOnBoard targ = players[1 - currentPlayer].board[indextarg];
 
                         result = ResolveUse(item, targ);
 
                         if (result.defenderDied)
                             players[1 - currentPlayer].removeFromBoard(indextarg);
                         else
-                            players[1 - currentPlayer].board.set(indextarg, result.defender);
+                            players[1 - currentPlayer].board[indextarg] = result.defender;
                     }
 
                     players[currentPlayer].ModifyHealth(result.attackerHealthChange);
@@ -339,7 +341,7 @@ namespace LOCAM {
             int healthGain = attacker.keywords.hasDrain ? attacker.attack : 0;
             int healthTaken = -attacker.attack;
 
-            ActionResult result = new ActionResult(attackerAfter, null, healthGain, healthTaken);
+            ActionResult result = new ActionResult(attackerAfter, null, false, false, healthGain, healthTaken);
             result.defenderDefenseChange = healthTaken;
             return result;
         }
@@ -394,7 +396,7 @@ namespace LOCAM {
             int itemgiverHealthChange = item.myHealthChange;
             int targetHealthChange = item.defense + item.oppHealthChange;
 
-            return new ActionResult(null, null, itemgiverHealthChange, targetHealthChange);
+            return new ActionResult(null, null, false, false, itemgiverHealthChange, targetHealthChange);
         }
 
         // old method
@@ -415,7 +417,7 @@ namespace LOCAM {
             foreach (CreatureOnBoard b in opponent.board)
                 lines.Add(b.ToString());
             foreach (Action a in opponent.performedActions)
-                lines.Add(cardIdMap.get(a.arg1).baseId + " " + a.toStringNoText());
+                lines.Add(cardIdMap[a.arg1].baseId + " " + a.toStringNoText());
 
             return lines.ToArray();
         }

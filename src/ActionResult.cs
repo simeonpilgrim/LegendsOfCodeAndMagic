@@ -37,10 +37,5 @@ namespace LOCAM
             this.attackerHealthChange = attackerHealthChange;
             this.defenderHealthChange = defenderHealthChange;
         }
-
-        public ActionResult(CreatureOnBoard attacker, CreatureOnBoard defender, int healthGain, int healthTaken)
-        {
-            this(attacker, defender, false, false, healthGain, healthTaken);
-        }
     }
 }

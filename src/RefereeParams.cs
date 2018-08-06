@@ -1,98 +1,87 @@
-namespace LOCAM {
+using System;
+using System.Text;
 
+namespace LOCAM
+{
     public class RefereeParams
     {
         public Random draftChoicesRNG;
         public Random shufflePlayer0RNG;
         public Random shufflePlayer1RNG;
-        public Integer[][] predefinedDraftIds = null;
-        private Properties params;
+        public int[,] predefinedDraftIds = null;
+        private Properties _params;
 
-  public RefereeParams(long draftChoicesSeed, long shufflePlayer0Seed, long shufflePlayer1Seed)
+        public RefereeParams(long draftChoicesSeed, long shufflePlayer0Seed, long shufflePlayer1Seed)
         {
-            draftChoicesRNG = new Random(draftChoicesSeed);
-            shufflePlayer0RNG = new Random(shufflePlayer0Seed);
-            shufflePlayer1RNG = new Random(shufflePlayer1Seed);
+            draftChoicesRNG = new Random((int)draftChoicesSeed);
+            shufflePlayer0RNG = new Random((int)shufflePlayer0Seed);
+            shufflePlayer1RNG = new Random((int)shufflePlayer1Seed);
         }
 
         public RefereeParams(MultiplayerGameManager<Player> gameManager)
         {
             // pure initialization if seed set by the manager
-            Long mainSeed = gameManager.getSeed();
-            Random RNG = new Random(mainSeed);
-            long draftChoicesSeed = RNG.nextLong();
-            long shufflePlayer0Seed = RNG.nextLong();
-            long shufflePlayer1Seed = RNG.nextLong();
+            long mainSeed = gameManager.getSeed();
+            _params = gameManager.getGameParameters();
 
-    params = gameManager.getGameParameters();
+            Random RNG = new Random((int)mainSeed);
 
-            if (isNumber(params.getProperty("seed"))) // overriding when seed given as parameter
+            if (long.TryParse(_params.getProperty("seed", ""), out long val)) // overriding when seed given as parameter
             {
-                mainSeed = Long.parseLong(params.getProperty("seed"));
-                RNG = new Random(mainSeed);
-                draftChoicesSeed = RNG.nextLong();
-                shufflePlayer0Seed = RNG.nextLong();
-                shufflePlayer1Seed = RNG.nextLong();
+                mainSeed = val;
+                RNG = new Random((int)mainSeed);
             }
-
+            long draftChoicesSeed = RNG.Next();
+            long shufflePlayer0Seed = RNG.Next();
+            long shufflePlayer1Seed = RNG.Next();
             // overriding remaining seeds
-            if (isNumber(params.getProperty("draftChoicesSeed")))
-                draftChoicesSeed = Long.parseLong(params.getProperty("draftChoicesSeed"));
-            if (isNumber(params.getProperty("shufflePlayer0Seed")))
-                shufflePlayer0Seed = Long.parseLong(params.getProperty("shufflePlayer0Seed"));
-            if (isNumber(params.getProperty("shufflePlayer1Seed")))
-                shufflePlayer1Seed = Long.parseLong(params.getProperty("shufflePlayer1Seed"));
 
-            if ( params.getProperty("predefinedDraftIds") != null)
-    {
-                predefinedDraftIds = new Integer[Constants.CARDS_IN_DECK][3];
-                string[] picks = params.getProperty("predefinedDraftIds").split(",");
+            if (long.TryParse(_params.getProperty("draftChoicesSeed", ""), out val))
+                draftChoicesSeed = val;
+            if (long.TryParse(_params.getProperty("shufflePlayer0Seed", ""), out val))
+                shufflePlayer0Seed = val;
+            if (long.TryParse(_params.getProperty("shufflePlayer1Seed", ""), out val))
+                shufflePlayer1Seed = val;
 
-                assert(picks.length >= Constants.CARDS_IN_DECK);
+            if (_params.getProperty("predefinedDraftIds", "") != null)
+            {
+                predefinedDraftIds = new int[Constants.CARDS_IN_DECK, 3];
+                string[] picks = _params.getProperty("predefinedDraftIds", "").Split(",");
+
+                //assert(picks.Length >= Constants.CARDS_IN_DECK);
 
                 for (int pick = 0; pick < Constants.CARDS_IN_DECK; pick++)
                 {
-                    string[] choice = picks[pick].trim().split("\\s+");
+                    string[] choice = picks[pick].Trim().Split("\\s+");
                     for (int i = 0; i < 3; i++)
                     {
-                        predefinedDraftIds[pick][i] = int.Parse(choice[i].trim());
+                        predefinedDraftIds[pick, i] = int.Parse(choice[i].Trim());
                     }
                 }
             }
 
-    // update params values
-    // we can't update predefinedDraftIds if there were not set by the user...
-    params.setProperty("draftChoicesSeed", Long.ToString(draftChoicesSeed));
-    params.setProperty("shufflePlayer0Seed", Long.ToString(shufflePlayer0Seed));
-    params.setProperty("shufflePlayer1Seed", Long.ToString(shufflePlayer1Seed));
+            // update params values
+            // we can't update predefinedDraftIds if there were not set by the user...
+            _params.Add("draftChoicesSeed", draftChoicesSeed.ToString());
+            _params.Add("shufflePlayer0Seed", shufflePlayer0Seed.ToString());
+            _params.Add("shufflePlayer1Seed", shufflePlayer1Seed.ToString());
 
             // set RNG's
-            draftChoicesRNG = new Random(draftChoicesSeed);
-            shufflePlayer0RNG = new Random(shufflePlayer0Seed);
-            shufflePlayer1RNG = new Random(shufflePlayer1Seed);
+            draftChoicesRNG = new Random((int)draftChoicesSeed);
+            shufflePlayer0RNG = new Random((int)shufflePlayer0Seed);
+            shufflePlayer1RNG = new Random((int)shufflePlayer1Seed);
 
             //Console.WriteLine(ToString());
         }
 
-        override
-      public string ToString()
+        override public string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("draftChoicesSeed").Append("=").Append(params.getProperty("draftChoicesSeed")).Append("\n");
-            sb.Append("shufflePlayer0Seed").Append("=").Append(params.getProperty("shufflePlayer0Seed")).Append("\n");
-            sb.Append("shufflePlayer1Seed").Append("=").Append(params.getProperty("shufflePlayer1Seed")).Append("\n");
-            //sb.Append("predefinedDraftIds").Append("=").Append(params.getProperty("predefinedDraftIds")).Append("\n");
+            sb.Append("draftChoicesSeed").Append("=").Append(_params.getProperty("draftChoicesSeed", "")).Append("\n");
+            sb.Append("shufflePlayer0Seed").Append("=").Append(_params.getProperty("shufflePlayer0Seed", "")).Append("\n");
+            sb.Append("shufflePlayer1Seed").Append("=").Append(_params.getProperty("shufflePlayer1Seed", "")).Append("\n");
+            //sb.Append("predefinedDraftIds").Append("=").Append(params.getProperty("predefinedDraftIds","")).Append("\n");
             return sb.ToString();
-        }
-        // todo ToString?
-
-        private bool isNumber(string str)
-        {
-            try {
-                long.parseLong(str);
-                return true;
-            } catch (NumberFormatException nfe) { }
-            return false;
         }
     }
 }

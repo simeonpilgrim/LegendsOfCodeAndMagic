@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Text;
+
 namespace LOCAM
 {
 
@@ -41,11 +44,11 @@ namespace LOCAM
          */
         public CreatureOnBoard(string data)
         {
-            string[] creature = data.split(" ");
-            this.id = int.parse(creature[0]);
-            this.baseId = int.parse(creature[1]);
-            this.attack = int.parse(creature[2]);
-            this.defense = int.parse(creature[3]);
+            string[] creature = data.Split(" ");
+            this.id = int.Parse(creature[0]);
+            this.baseId = int.Parse(creature[1]);
+            this.attack = int.Parse(creature[2]);
+            this.defense = int.Parse(creature[3]);
             this.keywords = new Keywords(creature[4]);
             this.canAttack = this.keywords.hasCharge;
             this.lastTurnDefense = this.defense;
@@ -71,7 +74,7 @@ namespace LOCAM
         {
             List<string> keywords = this.keywords.getListOfKeywords();
 
-            return string.join(", ", keywords);
+            return string.Join(", ", keywords);
         }
 
         public string toDescriptiveString()
@@ -87,40 +90,20 @@ namespace LOCAM
             return sb.ToString();
         }
 
-        public string ToString()
+        override public string ToString()
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(this.id).Append(' ');
-            sb.Append(this.baseId).Append(' ');
-            sb.Append(this.attack).Append(' ');
-            sb.Append(this.defense).Append(' ');
-            sb.Append(this.keywords);
-            return sb.ToString();
+            return $"{id} {baseId} {attack} {defense} {keywords}";
         }
 
         public string getAsInput(bool isOpponentBoard)
         {
             int position = isOpponentBoard ? -1 : 1;
-            StringBuilder s = new StringBuilder();
-            s.Append(baseId).Append(" ");
-            s.Append(id).Append(" ");
-            s.Append(position).Append(" ");
-            s.Append(Type.CREATURE.ordinal()).Append(" ");
-            s.Append(cost).Append(" ");
-            s.Append(attack).Append(" ");
-            s.Append(defense).Append(" ");
-            s.Append(keywords).Append(" ");
-            s.Append(myHealthChange).Append(" ");
-            s.Append(oppHealthChange).Append(" ");
-            s.Append(cardDraw).Append(" ");
-            return s.ToString();
+            return $"{baseId} {id} {position} {Card.Type.CREATURE} {cost} {attack} {defense} {keywords} {myHealthChange} {oppHealthChange} {cardDraw} ";
         }
 
         public string toTooltipText()
         {
             return baseCard.toTooltipText(this);
         }
-
-
     }
 }

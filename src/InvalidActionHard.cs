@@ -6,9 +6,8 @@ namespace LOCAM
     {
        // private static final long serialVersionUID = -8185589153224401565L;
 
-        public InvalidActionHard(string message):base(message)
+        public InvalidActionHard(string message, Exception e):base(message, e)
         {
         }
-
     }
 }

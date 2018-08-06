@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace LegendsOfCodeAndMagic
+namespace LOCAM
 {
     class Program
     {
@@ -31,28 +31,42 @@ namespace LegendsOfCodeAndMagic
         }
     }
 
-    public class GameManager<T> where T : AbstractPlayer
+
+    public class MultiplayerGameManager<T> where T : AbstractPlayer
     {
-        public GameManager()
+        public MultiplayerGameManager()
         {
             //Const.InitTheThingsInConstThatAreNotConstant();
         }
 
         internal List<T> players = new List<T>();
-        int league = 7;
+        readonly int league = 1;
         internal int maxTurns = 0;
         internal bool game_ended = false;
+        internal int seed = 0;
+        internal Properties _params;
 
-        // API's used by BotG
+        // API's used by LOCAM
+        public int getSeed() { return seed; }
+        public Properties getGameParameters() { return _params; }
+
         public int getLeagueLevel() { return league; }
         public void setFrameDuration(int value) { }
         public void setMaxTurns(int value) { maxTurns = value; }
-        public List<T> getActivePlayers() { return players.Where(p => p.active).ToList(); }
+        //public List<T> getActivePlayers() { return players.Where(p => p.active).ToList(); }
         public List<T> getPlayers() { return players; }
+        public T getPlayer(int index) { return players[index]; }
+
+        public void setTurnMaxTime(int ms) { }
+
+
         public void endGame() { game_ended = true; }
         public void addToGameSummary(string value) { System.Diagnostics.Debug.WriteLine($"SUM: {value}"); }
+    }
 
-        // API's used to run game
+    public class AbstractMultiplayerPlayer : AbstractPlayer
+    {
+        virtual public int getExpectedOutputLines() { return 0; }
     }
 
     public class AbstractPlayer
@@ -72,6 +86,12 @@ namespace LegendsOfCodeAndMagic
 
         }
         public void execute() { }
+
+        public string[] getOutputs()
+        {
+            return getOutputs(1);
+        }
+
         public string[] getOutputs(int lines_count)
         {
             // Read "output from player pipe

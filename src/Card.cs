@@ -124,7 +124,7 @@ namespace LOCAM
             else if (type == Type.ITEM_GREEN)
             {
                 if (keywords.Count != 0)
-                    sb.Append("Give ").Append(string.join(", ", keywords));
+                    sb.Append("Give ").Append(string.Join(", ", keywords));
                 if (myHealthChange != 0 || oppHealthChange != 0 || cardDraw != 0)
                 {
                     sb.Append(keywords.Count == 0 ? "" : "; ");
@@ -134,7 +134,7 @@ namespace LOCAM
             else if (type == Type.ITEM_RED)
             {
                 if (keywords.Count != 0)
-                    sb.Append("Remove ").Append(keywords.Count == 7 ? "all keywords" : string.join(", ", keywords));
+                    sb.Append("Remove ").Append(keywords.Count == 7 ? "all keywords" : string.Join(", ", keywords));
                 if (myHealthChange != 0 || oppHealthChange != 0 || cardDraw != 0)
                 {
                     sb.Append(keywords.Count == 0 ? "" : "; ");
@@ -147,35 +147,6 @@ namespace LOCAM
             }
 
             this.text = sb.ToString();
-        }
-
-        private string toTextDescription()
-        {
-            StringBuilder sb = new StringBuilder();
-            NumberFormat nf = new DecimalFormat("+#;-#");
-
-            if (type == Type.CREATURE)
-            {
-                sb.Append(attack).Append(" / ").Append(defense).Append(" creature. ").Append(text);
-            }
-            else if (type == Type.ITEM_GREEN)
-            {
-                sb.Append(text);
-                if (attack != 0 || defense != 0)
-                    sb.Append(" Give friendly creature ").Append(nf.format(attack)).Append(" / ").Append(nf.format(defense));
-            }
-            else if (type == Type.ITEM_RED)
-            {
-                sb.Append(text);
-                if (attack != 0 || defense != 0)
-                    sb.Append(" Give enemy creature ").Append(attack).Append(" / ").Append(defense);
-            }
-            else
-            {
-                sb.Append(defense != 0 ? ("Deal " + Math.Abs(defense) + " damage. ") : "").Append(text.Length() > 1 ? text : "");
-            }
-
-            return sb.ToString();
         }
 
         private string toTooltipInnerText()
@@ -211,7 +182,7 @@ namespace LOCAM
                         {
                             sb.Append(" ");
                         }
-                        sb.Append(aDiff == 0 ? " " : aDiff).Append("  ");
+                        sb.Append(aDiff == 0 ? " " : aDiff.ToString()).Append("  ");
                         if (dDiff > 0)
                         {
                             sb.Append("+");
@@ -220,7 +191,7 @@ namespace LOCAM
                         {
                             sb.Append(" ");
                         }
-                        sb.Append(dDiff == 0 ? " " : dDiff).Append(" ");
+                        sb.Append(dDiff == 0 ? " " : dDiff.ToString()).Append(" ");
                     }
                 }
                 else
@@ -261,70 +232,14 @@ namespace LOCAM
             return sb.ToString();
         }
 
-        public string toHTMLString()
-        {
-
-            StringBuilder sb = new StringBuilder();
-            sb.Append("<tr>");
-            sb.Append("<td>").Append(baseId).Append("</td>");
-            //string portraitpath = string.Format("src=\"../assets/card_images/%03d.png\"", baseId);
-            string portraitimage = string.Format("src=\"portraits/%03d.png\"", baseId);
-            string cardimage = string.Format("src=\"cards/%03d.png\"", baseId);
-            //sb.Append("<td>").Append("<a><img "+portraitimage+" width=\"50\"><img class=\"enlarge\" "+cardimage+" ></a>").Append("</td>"); // width="300" -- deprecated for now
-            sb.Append("<td>").Append("<a><img " + portraitimage + " width=\"50\"><img class=\"enlarge\" " + portraitimage + " ></a>").Append("</td>"); // width="300" -- deprecated for now
-
-            sb.Append("<td><b><a>" + name + "<img class=\"enlarge\" " + cardimage + " ></a></b></td>");
-
-            sb.Append("<td>").Append(type.getDescription()).Append("</td>");
-
-            sb.Append("<td>").Append(cost).Append("</td>");
-            sb.Append("<td>").Append(attack).Append("</td>");
-            sb.Append("<td>").Append(defense).Append("</td>");
-
-            sb.Append("<td><div class=\"keywords\">");
-            sb.Append(this.keywords);
-            sb.Append("</div></td>");
-
-            sb.Append("<td>").Append(myHealthChange).Append("</td>");
-            sb.Append("<td>").Append(oppHealthChange).Append("</td>");
-            sb.Append("<td>").Append(cardDraw).Append("</td>");
-
-            Pattern tesllink = Pattern.compile("@(\\d+)=(['\\w-]+)");
-            string htmlcomment = comment;
-            Matcher m = tesllink.matcher(htmlcomment);
-            while (m.find())
-            {
-                string lowname = m.group(2).replace("-", "").toLowerCase();
-                string fullname = m.group(2).replace("-", " ");
-                string link = string.Format("<a href=\"https://www.legends-decks.com/card/%s/%s\">%s<img class=\"enlarge\" src=\"https://www.legends-decks.com/img_cards/%s.png\"></a>",
-                        m.group(1), lowname, fullname, lowname);
-                htmlcomment = htmlcomment.Replace(m.group(0), link);
-            }
-
-            string tt = toTooltipInnerText();
-            if (tt.length() > 0)
-                sb.Append("<td><i>").Append(tt.Replace("\\n", "<br/>")).Append("</i></td>");
-            else
-                sb.Append("<td><i>").Append(toTextDescription()).Append("</i></td>");
-
-            sb.Append("<!--<td>").Append(htmlcomment).Append("</td>-->");
-
-
-            // card = "<tr><td>" + card.replace(";", "</td><td>") + "</td></tr>\n";
-
-
-            sb.Append("</tr>");
-            // todo
-            return sb.ToString();
-        }
 
         public string toDescriptiveString()
         {
             StringBuilder sb = new StringBuilder();
             if (id >= 0) sb.Append("id:").Append(this.id).Append(' ');
-            if (name!="?") sb.Append(this.name).Append(' ');
+            if (name != "?") sb.Append(this.name).Append(' ');
             sb.Append("(#").Append(this.baseId).Append(")").Append(' ');
-            sb.Append(type.getDescription()).Append(' ');
+            sb.Append(type).Append(' ');
 
             sb.Append("COST:").Append(this.cost).Append(' ');
             if (this.type == Type.CREATURE)

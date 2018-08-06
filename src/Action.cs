@@ -47,11 +47,11 @@ namespace LOCAM
             Type type;
             switch (str[0].Trim())
             {
-            case "SUMMON": type = Type.SUMMON; break;
-            case "ATTACK": type = Type.ATTACK; break;
-            case "USE": type = Type.USE; break;
-            case "PASS": type = Type.PASS; break;
-            default: throw new InvalidActionHard("Invalid action name. Should be SUMMON, ATTACK, or USE.");
+                case "SUMMON": type = Type.SUMMON; break;
+                case "ATTACK": type = Type.ATTACK; break;
+                case "USE": type = Type.USE; break;
+                case "PASS": type = Type.PASS; break;
+                default: throw new InvalidActionHard("Invalid action name. Should be SUMMON, ATTACK, or USE.", null);
             }
 
             if (type == Type.SUMMON)
@@ -63,17 +63,18 @@ namespace LOCAM
                     arg1 = int.Parse(args[0]);
                     string text = args.Length < 2 ? "" : args[1].Trim();
                     return Action.newSummon(arg1, text);
-                } catch (Exception e)
-                {
-                    throw new InvalidActionHard("Invalid SUMMON argument. Expected integer (card id).");
                 }
-            } else if (type == Type.PASS)
+                catch (Exception e)
+                {
+                    throw new InvalidActionHard("Invalid SUMMON argument. Expected integer (card id).", e);
+                }
+            }
+            else if (type == Type.PASS)
             {
                 return Action.newPass();
-            } else
+            }
+            else
             {
-
-
                 try
                 {
                     string[] args = str[1].Split(" ", 3);
@@ -84,12 +85,11 @@ namespace LOCAM
                     arg2 = int.Parse(args[1]);
                     string text = args.Length < 3 ? "" : args[2].Trim();
                     return type == Type.ATTACK ? Action.newAttack(arg1, arg2, text) : Action.newUse(arg1, arg2, text);
-                } catch (Exception e)
-                {
-                    throw new InvalidActionHard("Invalid " + type.ToString() + " arguments. Expected two integers (card id and target id).");
                 }
-
-
+                catch (Exception e)
+                {
+                    throw new InvalidActionHard("Invalid " + type.ToString() + " arguments. Expected two integers (card id and target id).", e);
+                }
             }
         }
 
