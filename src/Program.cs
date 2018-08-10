@@ -251,7 +251,7 @@ namespace LOCAM
         }
 
         internal List<T> players = new List<T>();
-        readonly int league = 1;
+        readonly int league = 4;
         internal int maxTurns = 0;
         internal bool game_ended = false;
         internal int seed = 0;
