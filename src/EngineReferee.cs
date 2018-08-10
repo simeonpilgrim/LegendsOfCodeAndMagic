@@ -6,8 +6,6 @@ namespace LOCAM
 
     public class EngineReferee
     {
-        //private MultiplayerGameManager<Player> gameManager; // @Inject ?
-
         public DraftPhase draft;
         public GameState state = null;
 
