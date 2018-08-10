@@ -26,7 +26,7 @@ namespace LOCAM
 
             Random RNG = new Random((int)mainSeed);
 
-            if (long.TryParse(_params.getProperty("seed", ""), out long val)) // overriding when seed given as parameter
+            if (long.TryParse(_params.getProperty("seed", ((int)DateTime.Now.Ticks).ToString()), out long val)) // overriding when seed given as parameter
             {
                 mainSeed = val;
                 RNG = new Random((int)mainSeed);
@@ -62,6 +62,7 @@ namespace LOCAM
 
             // update params values
             // we can't update predefinedDraftIds if there were not set by the user...
+            _params.Add("seed", mainSeed.ToString());
             _params.Add("draftChoicesSeed", draftChoicesSeed.ToString());
             _params.Add("shufflePlayer0Seed", shufflePlayer0Seed.ToString());
             _params.Add("shufflePlayer1Seed", shufflePlayer1Seed.ToString());
