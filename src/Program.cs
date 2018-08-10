@@ -89,10 +89,12 @@ namespace LOCAM
             process.StartInfo.RedirectStandardInput = true;
             process.ErrorDataReceived += new DataReceivedEventHandler(OutputHandlerError);
 
-            Player ps = new Player();
-            ps.player_id = id;
-            ps.pro = process;
-            ps.code_file_name = botcode;
+            Player ps = new Player
+            {
+                player_id = id,
+                pro = process,
+                code_file_name = botcode
+            };
 
             process.Start();
             process.BeginErrorReadLine();
@@ -120,11 +122,10 @@ namespace LOCAM
                 for (int i = 0; i < loops; i++)
                 {
                     string seedtxt = "";
-                    int seed;
 
                     foreach (var p in permutation2)
                     {
-                        var res = Battle(i, cp.GetCode(p[0]).file, cp.GetCode(p[1]).file, log, seedtxt, out seed);
+                        var res = Battle(i, cp.GetCode(p[0]).file, cp.GetCode(p[1]).file, log, seedtxt, out int seed);
                         cp.AddPoints(p[0], res[0]);
                         cp.AddPoints(p[1], res[1]);
 
