@@ -48,7 +48,7 @@ namespace LOCAM
                     string line = sr.ReadLine().Replace("//.*", "").Trim();
                     if (line.Length > 0)
                     {
-                        Card c = new Card(line.Split("\\s*;\\s*"));
+                        Card c = new Card(line.Split(";"));
                         CARDSET[c.baseId] = c;
                     }
                 }

@@ -1,29 +1,29 @@
 namespace LOCAM
 {
-    public class Referee : AbstractReferee
+    public class Referee
     {
         public MultiplayerGameManager<Player> gameManager;
 
         private EngineReferee engine = new EngineReferee();
 
-        public static int turn = 0;
+        public int turn = 0;
 
-        override public void init()
+        public void init()
         {
             // Engine
             engine.refereeInit(gameManager);
         }
 
-        override public void gameTurn(int turn)
+        public void gameTurn(int turn)
         {
             this.turn = turn;
             // Engine
             bool end = engine.refereeGameTurn(gameManager, turn);
         }
 
-        override public void onEnd()
+        public void onEnd()
         {
-            endScreenModule.setScores(gameManager.getPlayers().stream().mapToInt(p->p.getScore()).toArray());
+            //endScreenModule.setScores(gameManager.getPlayers()..mapToInt(p->p.getScore()).toArray());
         }
     }
 }

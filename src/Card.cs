@@ -26,7 +26,7 @@ namespace LOCAM
 
         public Type TypeFromDescription(string description)
         {
-            switch (description)
+            switch (description.Trim())
             {
                 case "creature": return Type.CREATURE;
                 case "itemGreen": return Type.ITEM_GREEN;
@@ -239,7 +239,7 @@ namespace LOCAM
             if (id >= 0) sb.Append("id:").Append(this.id).Append(' ');
             if (name != "?") sb.Append(this.name).Append(' ');
             sb.Append("(#").Append(this.baseId).Append(")").Append(' ');
-            sb.Append(type).Append(' ');
+            sb.Append((int)type).Append(' ');
 
             sb.Append("COST:").Append(this.cost).Append(' ');
             if (this.type == Type.CREATURE)
@@ -258,44 +258,14 @@ namespace LOCAM
             return sb.ToString();
         }
 
-        public string toStringWithoutId()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(this.baseId).Append(' ');
-            //sb.Append(this.type.getDescription()).Append(' ');
-            sb.Append((int)this.type).Append(' '); // todo test is it ok? 0, 1, 2, 3
-            sb.Append(this.cost).Append(' ');
-            sb.Append(this.attack).Append(' ');
-            sb.Append(this.defense).Append(' ');
-            sb.Append(this.keywords);
-            sb.Append(' ');
-            sb.Append(this.myHealthChange).Append(' ');
-            sb.Append(this.oppHealthChange).Append(' ');
-            sb.Append(this.cardDraw).Append(' ');
-            return sb.ToString();
-        }
-
         override public string ToString()
         {
-            return this.id + " " + toStringWithoutId();
+            return $"{id} {baseId} {(int)type} {cost} {attack} {defense} {keywords} {myHealthChange} {oppHealthChange} {cardDraw} ";
         }
 
         public string getAsInput()
         {
-            StringBuilder s = new StringBuilder();
-
-            s.Append(baseId).Append(" ");
-            s.Append(id).Append(" ");
-            s.Append(0).Append(" ");
-            s.Append((int)type).Append(" ");
-            s.Append(cost).Append(" ");
-            s.Append(attack).Append(" ");
-            s.Append(defense).Append(" ");
-            s.Append(keywords).Append(" ");
-            s.Append(myHealthChange).Append(" ");
-            s.Append(oppHealthChange).Append(" ");
-            s.Append(cardDraw).Append(" ");
-            return s.ToString();
+            return $"{baseId} {id} {0} {(int)type} {cost} {attack} {defense} {keywords} {myHealthChange} {oppHealthChange} {cardDraw} ";
         }
     }
 }

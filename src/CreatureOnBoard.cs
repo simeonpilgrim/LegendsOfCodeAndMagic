@@ -98,7 +98,7 @@ namespace LOCAM
         public string getAsInput(bool isOpponentBoard)
         {
             int position = isOpponentBoard ? -1 : 1;
-            return $"{baseId} {id} {position} {Card.Type.CREATURE} {cost} {attack} {defense} {keywords} {myHealthChange} {oppHealthChange} {cardDraw} ";
+            return $"{baseId} {id} {position} {(int)Card.Type.CREATURE} {cost} {attack} {defense} {keywords} {myHealthChange} {oppHealthChange} {cardDraw} ";
         }
 
         public string toTooltipText()

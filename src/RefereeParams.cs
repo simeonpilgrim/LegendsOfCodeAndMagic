@@ -43,7 +43,7 @@ namespace LOCAM
             if (long.TryParse(_params.getProperty("shufflePlayer1Seed", ""), out val))
                 shufflePlayer1Seed = val;
 
-            if (_params.getProperty("predefinedDraftIds", "") != null)
+            if (_params.getProperty("predefinedDraftIds", "") != "")
             {
                 predefinedDraftIds = new int[Constants.CARDS_IN_DECK, 3];
                 string[] picks = _params.getProperty("predefinedDraftIds", "").Split(",");

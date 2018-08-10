@@ -6,14 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Referee.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Referee.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="main\resources\cardlist.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

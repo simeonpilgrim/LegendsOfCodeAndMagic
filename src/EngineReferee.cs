@@ -43,7 +43,7 @@ namespace LOCAM
             }
 
 
-            Constants.LoadCardlist("cardlist.txt");
+            Constants.LoadCardlist("main\\resources\\cardlist.txt");
             if (Constants.VERBOSE_LEVEL > 1) Console.WriteLine("   CARDSET with " + Constants.CARDSET.Count + " cards loaded.");
             if (Constants.VERBOSE_LEVEL > 1) Console.WriteLine("   Difficulty is set to: " + difficulty.ToString() + ".");
 

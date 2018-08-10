@@ -59,7 +59,7 @@ namespace LOCAM
             hasWard = keywords.hasWard;
         }
 
-        public string ToString()
+        override public string ToString()
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(hasBreakthrough ? 'B' : '-');
