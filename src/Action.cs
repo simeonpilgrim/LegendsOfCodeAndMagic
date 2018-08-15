@@ -155,9 +155,9 @@ namespace LOCAM
         {
             switch (type)
             {
-            case Type.SUMMON: return string.Format("SUMMON %d", arg1);
-            case Type.ATTACK: return string.Format("ATTACK %d %d", arg1, arg2);
-            case Type.USE: return string.Format("USE %d %d", arg1, arg2);
+            case Type.SUMMON: return $"SUMMON {arg1}";
+            case Type.ATTACK: return $"ATTACK {arg1} {arg2}";
+            case Type.USE: return $"USE {arg1} {arg2}";
             case Type.PASS: return "PASS";
             }
             return base.ToString();
@@ -168,9 +168,9 @@ namespace LOCAM
         {
             switch (type)
             {
-            case Type.SUMMON: return string.Format("SUMMON %d %s", arg1, text);
-            case Type.ATTACK: return string.Format("ATTACK %d %d %s", arg1, arg2, text);
-            case Type.USE: return string.Format("USE %d %d %s", arg1, arg2, text);
+            case Type.SUMMON: return $"SUMMON {arg1} {text}";
+            case Type.ATTACK: return $"ATTACK {arg1} {arg2} {text}";
+            case Type.USE: return $"USE {arg1} {arg2} {text}";
             case Type.PASS: return "PASS";
             }
             return base.ToString();
@@ -183,6 +183,11 @@ namespace LOCAM
             if (!(other is Action)) return false;
             Action a = (Action)other;
             return this.toStringNoText().Equals(a.toStringNoText());
+        }
+
+        public override int GetHashCode()
+        {
+            return toStringNoText().GetHashCode();
         }
     }
 }
