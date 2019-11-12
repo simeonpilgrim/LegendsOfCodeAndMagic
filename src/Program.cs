@@ -158,7 +158,11 @@ namespace LOCAM
 
             foreach (var cp in Tumbles(codes))
             {
-                RunCodePair(cp, 30);
+                RunCodePair(cp, 60);
+            }
+            using (StreamWriter big_log = new StreamWriter(Path.Combine(DataDir, BigRecordFileName), true))
+            {
+                big_log.WriteLine();
             }
         }
 
